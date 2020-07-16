@@ -29,12 +29,48 @@ class solver {
     print() {
         let str = '';
 
-        this.field.forEach(r => {
-            r.forEach(n => {
-                str += n + ' ';
+        // print top header
+        for (let c=0; c<Game.maxColumnNumbers; c++) {
+            for (let r=0; r<Game.maxRowNumbers; r++) {
+                str += '   '; 
+            }
+            Game.task.columns.forEach(col => {
+                if (col[c]) {
+                    str += ' ' + col[c] + ' ';
+                } else {
+                    str += '   ';
+                }
             })
             str += '\n';
-        })
+        }
+
+        // print side header & field
+        for (let i=0; i<size; i++) {
+           
+            // header
+            for (let r=0; r<Game.maxRowNumbers; r++) {
+                if (Game.task.rows[i][r]) {
+                    str += ' ' + Game.task.rows[i][r] + ' ';
+                } else {
+                    str += '   ';
+                }
+            }
+            
+
+             // field
+             this.field[i].forEach(e => {
+                str += ' ' + e + ' ';
+            })    
+
+            str += '\n';
+        }
+
+        // this.field.forEach(r => {
+        //     r.forEach(n => {
+        //         str += n + ' ';
+        //     })
+        //     str += '\n';
+        // })
 
         console.log(str);
     }
@@ -43,3 +79,4 @@ class solver {
 let mysolver = new solver(5);
 
 mysolver.print();
+
