@@ -1,17 +1,15 @@
 const fs = require('fs');
 
-const Game = require('./game.json');
+const Game = require('./game2/game2.json');
 
-let size = Game.task.columns.length;
-
-class solver {
+class Solver {
     constructor(size) {
         this.size = size;
         this.field = [];
 
-        for (let i=0; i<size; i++) {
+        for (let i = 0; i < size; i++) {
             let temp = [];
-            for (let j=0; j<size; j++) {
+            for (let j = 0; j < size; j++) {
                 temp.push('.');
             }
             this.field.push(temp);
@@ -26,13 +24,13 @@ class solver {
         return this.field;
     }
 
-    print() {
-        let str = '';
+    toString() {
+        let str = '\n';
 
         // print top header
-        for (let c=0; c<Game.maxColumnNumbers; c++) {
-            for (let r=0; r<Game.maxRowNumbers; r++) {
-                str += '   '; 
+        for (let c = 0; c < Game.maxColumnNumbers; c++) {
+            for (let r = 0; r < Game.maxRowNumbers; r++) {
+                str += '   ';
             }
             Game.task.columns.forEach(col => {
                 if (col[c]) {
@@ -45,38 +43,58 @@ class solver {
         }
 
         // print side header & field
-        for (let i=0; i<size; i++) {
-           
+        for (let i = 0; i < this.size; i++) {
+
             // header
-            for (let r=0; r<Game.maxRowNumbers; r++) {
+            for (let r = 0; r < Game.maxRowNumbers; r++) {
                 if (Game.task.rows[i][r]) {
                     str += ' ' + Game.task.rows[i][r] + ' ';
                 } else {
                     str += '   ';
                 }
             }
-            
 
-             // field
-             this.field[i].forEach(e => {
+
+            // field
+            this.field[i].forEach(e => {
                 str += ' ' + e + ' ';
-            })    
-
+            })
             str += '\n';
         }
 
-        // this.field.forEach(r => {
-        //     r.forEach(n => {
-        //         str += n + ' ';
-        //     })
-        //     str += '\n';
-        // })
-
-        console.log(str);
+        return(str);
     }
+
+    solve() {
+
+    }
+
+    getOptions(arr) {
+        let baseCase = '';
+        arr.forEach(e => {
+            for (let i=0; i<parseInt(e); i++) {
+                baseCase += '0';
+            }
+            baseCase += '.';
+        })
+
+        // get rid of extra period
+        baseCase = baseCase.substr(0, baseCase.length - 1);
+
+        // add periods for extra spaces at end
+        while (baseCase.length < size) {
+            baseCase += '.';
+        }    
+
+        console.log(baseCase);
+    }
+
+    
 }
 
-let mysolver = new solver(5);
+let mysolver = new Solver(Game.task.rows.length);
 
-mysolver.print();
+console.log(mysolver.toString());
+
+// mysolver.getOptions(Game.task.columns[2]);
 
