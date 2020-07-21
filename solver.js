@@ -1,17 +1,33 @@
 const Game = require('./game2/game2.json');
 
 class Solver {
-    constructor(size) {
-        this.size = size;
+    constructor(Game) {
+        this.size = Game.task.rows.length;
         this.field = [];
 
-        for (let i = 0; i < size; i++) {
+        for (let i = 0; i < this.size; i++) {
             let temp = [];
-            for (let j = 0; j < size; j++) {
+            for (let j = 0; j < this.size; j++) {
                 temp.push('.');
             }
             this.field.push(temp);
         }
+
+        this.rows = [];
+        Game.task.rows.forEach(row => {
+            this.rows.push({
+                'header': row,
+                'options': this.getOptions(row)
+            })
+        })
+
+        this.columns = [];
+        Game.task.columns.forEach(col => {
+            this.columns.push({
+                'header': col,
+                'options': this.getOptions(col)
+            })
+        })
     }
 
     getSize() {
@@ -65,13 +81,9 @@ class Solver {
         return (str);
     }
 
-    solve() {
-
-    }
-
     /**
      * Returns an array with all possible row/column combinations that satisfy the given headers.
-     * @param {*} array row or column header(s) 
+     * @param {*} array header for row or column
      */
     getOptions(arr) {
 
@@ -80,11 +92,11 @@ class Solver {
         // for when there's only one number in the header
         if (arr.length == 1) {
             let num = this.size - arr[0] + 1;
-            
-            for (let i=0; i<num; i++) {
+
+            for (let i = 0; i < num; i++) {
                 let temp = new Array(this.size).fill('.');
 
-                for (let j=0; j<arr[0]; j++) {
+                for (let j = 0; j < arr[0]; j++) {
                     temp[i + j] = '0';
                 }
                 options.push(temp);
@@ -116,7 +128,7 @@ class Solver {
             let result = i.toString(base);
 
             if (arr.length == 1) {
-                
+
                 // convert to array of integers
                 result = result.split('');
                 for (let j = 0; j < result.length; j++) {
@@ -165,6 +177,14 @@ class Solver {
         })
         return options;
     }
+
+    /**
+     * Solves the game (if possible without needing to guess at any point)
+     */
+    solve() {
+    
+    }
 }
 
-let mysolver = new Solver(Game.task.rows.length);
+let mysolver = new Solver(Game);
+mysolver.solve();
