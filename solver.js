@@ -1,4 +1,5 @@
-const Game = require('./game2/game2.json');
+// const Game = require('./game2/game2.json');
+const Game = require('./game1/game.json');
 
 class Solver {
     constructor(Game) {
@@ -42,7 +43,7 @@ class Solver {
      * Returns a string containing the field headers and contents
      * in a readable format.
      */
-    toString() {
+    getPrettyField() {
         let str = '\n';
 
         // print top header
@@ -117,14 +118,28 @@ class Solver {
         }
         startingIndices.reverse();
 
-        // get base
+        // get base (represents number of spaces each chunk can shift within a block)
         let sum = 0;
         arr.forEach(e => { sum += Number(e); });
         let base = this.size - sum - (arr.length - 1) + 1;
 
+        // if there is only one option
+        if (base == 1) {
+            let only = [];
+
+            arr.forEach(e => {
+                for (let i=0; i<e; i++) { only.push('O'); }
+                only.push('.');
+            })
+            only.pop(); // take out last .
+            options.push(only);
+            return options;
+        }
+
         // get based numbers
         let dec = [];
         for (let i = 0; i < Math.pow(base, arr.length); i++) {
+
             let result = i.toString(base);
 
             if (arr.length == 1) {
@@ -292,4 +307,5 @@ class Solver {
 let mysolver = new Solver(Game);
 
 mysolver.solve();
-console.log(mysolver.toString());
+// console.log(mysolver.getPrettyField());
+mysolver.getPrettyField();
