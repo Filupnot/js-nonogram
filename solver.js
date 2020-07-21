@@ -74,11 +74,11 @@ class Solver {
 
             // field
             this.field[i].forEach(e => {
-                str += ' ' + e + ' ';
+                str += ' ' + (e == 'O' ? 'O' : '.') + ' ';
             })
             str += '\n';
         }
-        return (str);
+        return(str);
     }
 
     /**
@@ -97,7 +97,7 @@ class Solver {
                 let temp = new Array(this.size).fill('.');
 
                 for (let j = 0; j < arr[0]; j++) {
-                    temp[i + j] = '0';
+                    temp[i + j] = 'O';
                 }
                 options.push(temp);
             }
@@ -170,7 +170,7 @@ class Solver {
                 let startpos = startingIndices[i] + d[i];
 
                 for (let j = 0; j < arr[i]; j++) {
-                    temp[j + startpos] = '0';
+                    temp[j + startpos] = 'O';
                 }
             }
             options.push(temp);
@@ -179,12 +179,117 @@ class Solver {
     }
 
     /**
-     * Solves the game (if possible without needing to guess at any point)
+     * Returns true if the puzzle is solved.
+     */
+    isComplete() {
+        for (let i = 0; i < this.size; i++) {
+            if (this.rows[i].options.length != 1 || this.columns[i].options.length != 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Solves the game (if possible without needing to guess at any point).
      */
     solve() {
-    
+
+        do {
+
+            // rows
+            this.rows.forEach((row, ri, rows) => {
+
+                // get rid of conflicting options
+                for (let i = 0; i < this.size; i++) {
+                    if (this.field[ri][i] == 'O') {
+                        for (let oi = row.options.length - 1; oi >= 0; oi--) {
+                            if (row.options[oi][i] == '.') {
+                                rows[ri].options.splice(oi, 1);
+                                continue;
+                            }
+                        }
+                    }
+                    else if (this.field[ri][i] == 'X') {
+                        for (let oi = row.options.length - 1; oi >= 0; oi--) {
+                            if (row.options[oi][i] == 'O') {
+                                rows[ri].options.splice(oi, 1);
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                // implement master blocks
+                for (let i = 0; i < this.size; i++) {
+                    let fill = true, nofill = true;
+
+                    row.options.forEach(o => {
+                        o[i] == '.' ? fill = false : nofill = false;
+                    })
+
+                    if (fill) {
+                        this.field[ri][i] = 'O';
+                    }
+                    else if (nofill) {
+                        this.field[ri][i] = 'X';
+                    }
+                    else {
+                        this.field[ri][i] = '.';
+                    }
+
+                }
+            })
+
+            // columns
+            this.columns.forEach((col, ci, columns) => {
+
+                // get rid of conflicting options
+                for (let i = 0; i < this.size; i++) {
+                    if (this.field[i][ci] == 'O') {
+                        for (let oi = col.options.length - 1; oi >= 0; oi--) {
+                            if (col.options[oi][i] == '.') {
+                                columns[ci].options.splice(oi, 1);
+                                continue;
+                            }
+                        }
+                    }
+                    else if (this.field[i][ci] == 'X') {
+                        for (let oi = col.options.length - 1; oi >= 0; oi--) {
+                            if (col.options[oi][i] == 'O') {
+                                columns[ci].options.splice(oi, 1);
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                // implement master blocks
+                for (let i = 0; i < this.size; i++) {
+                    let fill = true, nofill = true;
+
+                    col.options.forEach(o => {
+                        o[i] == '.' ? fill = false : nofill = false;
+                    })
+
+                    if (fill) {
+                        this.field[i][ci] = 'O';
+                    }
+                    else if (nofill) {
+                        this.field[i][ci] = 'X';
+                    }
+                    else {
+                        this.field[i][ci] = '.';
+                    }
+
+                }
+            })
+
+        } while (!this.isComplete());
     }
 }
 
 let mysolver = new Solver(Game);
+
 mysolver.solve();
+console.log(mysolver.toString());
