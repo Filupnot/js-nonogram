@@ -10,12 +10,13 @@ let task = {
 }
 
 let game = {
-    task, 
-    'maxColumnNumbers': 3,
+    task,
+    'maxColumnNumbers': 4,
     'maxRowNumbers': 4
 }
 
-fs.readFile('./game2/game2.txt', (err, data) => {
+fs.readFile('./game3/game3.txt', (err, data) => {
+
 
     if (err) { console.log(err); }
 
@@ -50,12 +51,7 @@ fs.readFile('./game2/game2.txt', (err, data) => {
     })
     task.rows.push(temp);
 
-    console.log(jd);
-
-    console.log('rows:', task.rows);
-    
-
-    fs.writeFile('./game2/game2.json', JSON.stringify(game), () => {
+    fs.writeFile('./game3/game3.json', JSON.stringify(game), () => {
         console.log('done!');
     })
 })

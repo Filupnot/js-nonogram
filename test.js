@@ -1,6 +1,4 @@
-let arr = new Array(5).fill('0');
-let arr2 = ['0', '0', '0'];
-console.log(arr);
+let num = 12;
+let str = num.toString(13);
 
-arr[2] = '.';
-console.log(arr);
+console.log(parseInt(str, 18))

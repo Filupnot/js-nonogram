@@ -1,5 +1,6 @@
 // const Game = require('./game2/game2.json');
-const Game = require('./game1/game.json');
+// const Game = require('./game1/game.json');
+const Game = require('./game3/game3.json');
 
 class Solver {
     constructor(Game) {
@@ -53,7 +54,7 @@ class Solver {
             }
             Game.task.columns.forEach(col => {
                 if (col[c]) {
-                    str += ' ' + col[c] + ' ';
+                    str += col[c].padEnd(3, '   ');
                 } else {
                     str += '   ';
                 }
@@ -67,7 +68,7 @@ class Solver {
             // header
             for (let r = 0; r < Game.maxRowNumbers; r++) {
                 if (Game.task.rows[i][r]) {
-                    str += ' ' + Game.task.rows[i][r] + ' ';
+                    str += Game.task.rows[i][r].padEnd(3, '   ');
                 } else {
                     str += '   ';
                 }
@@ -75,11 +76,12 @@ class Solver {
 
             // field
             this.field[i].forEach(e => {
-                str += ' ' + (e == 'O' ? 'O' : '.') + ' ';
+                str += (e == 'O' ? 'O' : '.').padEnd(3, '   '); // hides X's for readability
+                // str += e.padEnd(3, '   '); // shows X's for debugging
             })
             str += '\n';
         }
-        return(str);
+        return (str);
     }
 
     /**
@@ -128,7 +130,7 @@ class Solver {
             let only = [];
 
             arr.forEach(e => {
-                for (let i=0; i<e; i++) { only.push('O'); }
+                for (let i = 0; i < e; i++) { only.push('O'); }
                 only.push('.');
             })
             only.pop(); // take out last .
@@ -138,43 +140,34 @@ class Solver {
 
         // get based numbers
         let dec = [];
-        for (let i = 0; i < Math.pow(base, arr.length); i++) {
+        for (let i = 0; i < Math.pow(base, arr.length); i++) { 
 
             let result = i.toString(base);
 
-            if (arr.length == 1) {
+            // check that digit values are NEVER descending
+            let good = true;
+            for (let i = 1; i < result.length; i++) {
+                // if (result.charAt(i) < result.charAt(i - 1)) {
+                if (parseInt(result.charAt(i), base) < parseInt(result.charAt(i - 1), base)) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+
+                // padding
+                result = result.padStart(arr.length, '00000000000000000000');
 
                 // convert to array of integers
                 result = result.split('');
                 for (let j = 0; j < result.length; j++) {
-                    result[j] = Number(result[j]);
+                    // result[j] = Number(result[j]);
+                    result[j] = parseInt(result[j], base);
                 }
 
                 dec.push(result);
-            } else {
-
-                // check that digit values are NEVER descending
-                let good = true;
-                for (let i = 1; i < result.length; i++) {
-                    if (result.charAt(i) < result.charAt(i - 1)) {
-                        good = false;
-                        break;
-                    }
-                }
-                if (good) {
-
-                    // padding
-                    result = result.padStart(arr.length, '00000000000000000000');
-
-                    // convert to array of integers
-                    result = result.split('');
-                    for (let j = 0; j < result.length; j++) {
-                        result[j] = Number(result[j]);
-                    }
-
-                    dec.push(result);
-                }
             }
+
         }
 
         // get options
@@ -307,5 +300,5 @@ class Solver {
 let mysolver = new Solver(Game);
 
 mysolver.solve();
-// console.log(mysolver.getPrettyField());
 mysolver.getPrettyField();
+// console.log(mysolver.getPrettyField());
