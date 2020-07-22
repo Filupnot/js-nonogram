@@ -1,7 +1,3 @@
-// const Game = require('./game2/game2.json');
-// const Game = require('./game1/game.json');
-const Game = require('./game3/game3.json');
-
 class Solver {
     constructor(Game) {
         this.size = Game.task.rows.length;
@@ -30,14 +26,6 @@ class Solver {
                 'options': this.getOptions(col)
             })
         })
-    }
-
-    getSize() {
-        return this.size;
-    }
-
-    getField() {
-        return this.field;
     }
 
     /**
@@ -298,7 +286,6 @@ class Solver {
 }
 
 let mysolver = new Solver(Game);
-
 mysolver.solve();
 mysolver.getPrettyField();
-// console.log(mysolver.getPrettyField());
+
