@@ -128,7 +128,7 @@ class Solver {
 
         // get based numbers
         let dec = [];
-        for (let i = 0; i < Math.pow(base, arr.length); i++) { 
+        for (let i = 0; i < Math.pow(base, arr.length); i++) {
 
             let result = i.toString(base);
 
@@ -283,9 +283,18 @@ class Solver {
 
         } while (!this.isComplete());
     }
+
+    fillGame() {
+        let toCode = (str) => str === '.' ? 0 : str === 'O' ? 1 : 2;
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.field[row].length; col++) {
+                Game.drawCellStatus({ row, col }, toCode(this.field[row][col]))
+            }
+        }
+    }
 }
 
 let mysolver = new Solver(Game);
 mysolver.solve();
 mysolver.getPrettyField();
-
+mysolver.fillGame()
