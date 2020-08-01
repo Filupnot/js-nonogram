@@ -1,4 +1,4 @@
-# js-nonogram
+# Nonogram Solver
 A script that can solve any sized nonogram puzzle on the website [puzzle-nonograms.com](https://www.puzzle-nonograms.com). It uses the information provided by the website's **Game** object to solve and submit any given puzzle in a similar way to how a human would, only much faster. This is opposed to solving it recursively, which would be less time efficient for larger puzzles (something like O(2^n), n being number of squares). 
 
 If you don't know what this game is or how it works, check out [this tutorial](https://www.puzzles-mobile.com/nonograms/tutorial)!
