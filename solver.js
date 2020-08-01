@@ -1,7 +1,3 @@
-// const Game = require('./game2/game2.json');
-// const Game = require('./game1/game.json');
-const Game = require('./game3/game3.json');
-
 class Solver {
     constructor(Game) {
         this.size = Game.task.rows.length;
@@ -10,7 +6,7 @@ class Solver {
         for (let i = 0; i < this.size; i++) {
             let temp = [];
             for (let j = 0; j < this.size; j++) {
-                temp.push('.');
+                temp.push(0);
             }
             this.field.push(temp);
         }
@@ -30,14 +26,6 @@ class Solver {
                 'options': this.getOptions(col)
             })
         })
-    }
-
-    getSize() {
-        return this.size;
-    }
-
-    getField() {
-        return this.field;
     }
 
     /**
@@ -76,8 +64,8 @@ class Solver {
 
             // field
             this.field[i].forEach(e => {
-                str += (e == 'O' ? 'O' : '.').padEnd(3, '   '); // hides X's for readability
-                // str += e.padEnd(3, '   '); // shows X's for debugging
+                str += (e == 1 ? 'O' : '.').padEnd(3, '   '); // hides X's for readability
+                // str += e.toString().padEnd(3, '   '); // shows X's for debugging
             })
             str += '\n';
         }
@@ -97,10 +85,10 @@ class Solver {
             let num = this.size - arr[0] + 1;
 
             for (let i = 0; i < num; i++) {
-                let temp = new Array(this.size).fill('.');
+                let temp = new Array(this.size).fill(0);
 
                 for (let j = 0; j < arr[0]; j++) {
-                    temp[i + j] = 'O';
+                    temp[i + j] = 1;
                 }
                 options.push(temp);
             }
@@ -130,8 +118,8 @@ class Solver {
             let only = [];
 
             arr.forEach(e => {
-                for (let i = 0; i < e; i++) { only.push('O'); }
-                only.push('.');
+                for (let i = 0; i < e; i++) { only.push(1); }
+                only.push(0);
             })
             only.pop(); // take out last .
             options.push(only);
@@ -140,7 +128,7 @@ class Solver {
 
         // get based numbers
         let dec = [];
-        for (let i = 0; i < Math.pow(base, arr.length); i++) { 
+        for (let i = 0; i < Math.pow(base, arr.length); i++) {
 
             let result = i.toString(base);
 
@@ -172,13 +160,13 @@ class Solver {
 
         // get options
         dec.forEach(d => {
-            let temp = new Array(this.size).fill('.');
+            let temp = new Array(this.size).fill(0);
 
             for (let i = 0; i < arr.length; i++) {
                 let startpos = startingIndices[i] + d[i];
 
                 for (let j = 0; j < arr[i]; j++) {
-                    temp[j + startpos] = 'O';
+                    temp[j + startpos] = 1;
                 }
             }
             options.push(temp);
@@ -210,17 +198,17 @@ class Solver {
 
                 // get rid of conflicting options
                 for (let i = 0; i < this.size; i++) {
-                    if (this.field[ri][i] == 'O') {
+                    if (this.field[ri][i] == 1) {
                         for (let oi = row.options.length - 1; oi >= 0; oi--) {
-                            if (row.options[oi][i] == '.') {
+                            if (row.options[oi][i] == 0) {
                                 rows[ri].options.splice(oi, 1);
                                 continue;
                             }
                         }
                     }
-                    else if (this.field[ri][i] == 'X') {
+                    else if (this.field[ri][i] == 2) {
                         for (let oi = row.options.length - 1; oi >= 0; oi--) {
-                            if (row.options[oi][i] == 'O') {
+                            if (row.options[oi][i] == 1) {
                                 rows[ri].options.splice(oi, 1);
                                 continue;
                             }
@@ -233,17 +221,17 @@ class Solver {
                     let fill = true, nofill = true;
 
                     row.options.forEach(o => {
-                        o[i] == '.' ? fill = false : nofill = false;
+                        o[i] == 0 ? fill = false : nofill = false;
                     })
 
                     if (fill) {
-                        this.field[ri][i] = 'O';
+                        this.field[ri][i] = 1;
                     }
                     else if (nofill) {
-                        this.field[ri][i] = 'X';
+                        this.field[ri][i] = 2;
                     }
                     else {
-                        this.field[ri][i] = '.';
+                        this.field[ri][i] = 0;
                     }
 
                 }
@@ -254,17 +242,17 @@ class Solver {
 
                 // get rid of conflicting options
                 for (let i = 0; i < this.size; i++) {
-                    if (this.field[i][ci] == 'O') {
+                    if (this.field[i][ci] == 1) {
                         for (let oi = col.options.length - 1; oi >= 0; oi--) {
-                            if (col.options[oi][i] == '.') {
+                            if (col.options[oi][i] == 0) {
                                 columns[ci].options.splice(oi, 1);
                                 continue;
                             }
                         }
                     }
-                    else if (this.field[i][ci] == 'X') {
+                    else if (this.field[i][ci] == 2) {
                         for (let oi = col.options.length - 1; oi >= 0; oi--) {
-                            if (col.options[oi][i] == 'O') {
+                            if (col.options[oi][i] == 1) {
                                 columns[ci].options.splice(oi, 1);
                                 continue;
                             }
@@ -277,28 +265,41 @@ class Solver {
                     let fill = true, nofill = true;
 
                     col.options.forEach(o => {
-                        o[i] == '.' ? fill = false : nofill = false;
+                        o[i] == 0 ? fill = false : nofill = false;
                     })
 
                     if (fill) {
-                        this.field[i][ci] = 'O';
+                        this.field[i][ci] = 1;
                     }
                     else if (nofill) {
-                        this.field[i][ci] = 'X';
+                        this.field[i][ci] = 2;
                     }
                     else {
-                        this.field[i][ci] = '.';
+                        this.field[i][ci] = 0;
                     }
 
                 }
             })
 
         } while (!this.isComplete());
+
+        this.fillGame()
+    }
+
+    /**
+     * Interacts with Game object and fills in field
+     */
+    fillGame() {
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.size; col++) {
+                Game.drawCellStatus({ row, col }, this.field[row][col]) // changes CSS of cell
+                Game.setCellState({ row, col}, this.field[row][col]) // changes cell statue
+            }
+        }
+
+        $('#btnReady').click() // submits game
     }
 }
 
 let mysolver = new Solver(Game);
-
 mysolver.solve();
-mysolver.getPrettyField();
-// console.log(mysolver.getPrettyField());
