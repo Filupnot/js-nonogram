@@ -1,4 +1,12 @@
+// Script to solve any puzzle on https://www.puzzle-nonograms.com
+// Created by Philip Knott
+// Finished in July 2020 (during quarantine, because what else is there to do??)
+
 class Solver {
+    /**
+     * Constructor
+     * @param {Object} Game
+     */
     constructor(Game) {
         this.size = Game.task.rows.length;
         this.field = [];
@@ -29,55 +37,10 @@ class Solver {
     }
 
     /**
-     * Returns a string containing the field headers and contents
-     * in a readable format.
-     */
-    getPrettyField() {
-        let str = '\n';
-
-        // print top header
-        for (let c = 0; c < Game.maxColumnNumbers; c++) {
-            for (let r = 0; r < Game.maxRowNumbers; r++) {
-                str += '   ';
-            }
-            Game.task.columns.forEach(col => {
-                if (col[c]) {
-                    str += col[c].padEnd(3, '   ');
-                } else {
-                    str += '   ';
-                }
-            })
-            str += '\n';
-        }
-
-        // print side header & field
-        for (let i = 0; i < this.size; i++) {
-
-            // header
-            for (let r = 0; r < Game.maxRowNumbers; r++) {
-                if (Game.task.rows[i][r]) {
-                    str += Game.task.rows[i][r].padEnd(3, '   ');
-                } else {
-                    str += '   ';
-                }
-            }
-
-            // field
-            this.field[i].forEach(e => {
-                str += (e == 1 ? 'O' : '.').padEnd(3, '   '); // hides X's for readability
-                // str += e.toString().padEnd(3, '   '); // shows X's for debugging
-            })
-            str += '\n';
-        }
-        return (str);
-    }
-
-    /**
      * Returns an array with all possible row/column combinations that satisfy the given headers.
-     * @param {*} array header for row or column
+     * @param {Array} header for row or column
      */
     getOptions(arr) {
-
         let options = [];
 
         // for when there's only one number in the header
@@ -96,7 +59,7 @@ class Solver {
         }
 
         // get starting indices (sum of previous numbers plus sum of spaces between)
-        // ex: the base case [ 0 . 0 0 . 0 . 0 . . ] would return the array [ 0 2 5 7 ]
+        // ex: the base case [1, 0, 1, 1, 0, 1, 0, 1, 0, 0] would return the array [0, 2, 5, 7]
         let startingIndices = [];
         for (let i = arr.length - 1; i >= 0; i--) {
             let temp = 0;
@@ -129,7 +92,6 @@ class Solver {
         // get based numbers
         let dec = [];
         for (let i = 0; i < Math.pow(base, arr.length); i++) {
-
             let result = i.toString(base);
 
             // check that digit values are NEVER descending
@@ -155,7 +117,6 @@ class Solver {
 
                 dec.push(result);
             }
-
         }
 
         // get options
@@ -171,44 +132,36 @@ class Solver {
             }
             options.push(temp);
         })
+
         return options;
     }
 
     /**
-     * Returns true if the puzzle is solved.
-     */
-    isComplete() {
-        for (let i = 0; i < this.size; i++) {
-            if (this.rows[i].options.length != 1 || this.columns[i].options.length != 1) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Solves the game (if possible without needing to guess at any point).
+     * Solves the game! 
      */
     solve() {
 
+        // Returns true if the game is completed and all headers are satisfied
+        let isComplete = () => {
+            for (let i = 0; i < this.size; i++) {
+                if (this.rows[i].options.length != 1 || this.columns[i].options.length != 1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // keeps iterating through all rows and columns until game is solved
         do {
 
             // rows
             this.rows.forEach((row, ri, rows) => {
 
-                // get rid of conflicting options
+                // get rid of options that conflict with what's already on the field
                 for (let i = 0; i < this.size; i++) {
-                    if (this.field[ri][i] == 1) {
+                    if (this.field[ri][i] == 1 || this.field[ri][i] == 2) {
                         for (let oi = row.options.length - 1; oi >= 0; oi--) {
-                            if (row.options[oi][i] == 0) {
-                                rows[ri].options.splice(oi, 1);
-                                continue;
-                            }
-                        }
-                    }
-                    else if (this.field[ri][i] == 2) {
-                        for (let oi = row.options.length - 1; oi >= 0; oi--) {
-                            if (row.options[oi][i] == 1) {
+                            if (row.options[oi][i] == (this.field[ri][i] == 1 ? 0 : 1)) {
                                 rows[ri].options.splice(oi, 1);
                                 continue;
                             }
@@ -216,7 +169,7 @@ class Solver {
                     }
                 }
 
-                // implement master blocks
+                // implement values which all options share 
                 for (let i = 0; i < this.size; i++) {
                     let fill = true, nofill = true;
 
@@ -224,35 +177,18 @@ class Solver {
                         o[i] == 0 ? fill = false : nofill = false;
                     })
 
-                    if (fill) {
-                        this.field[ri][i] = 1;
-                    }
-                    else if (nofill) {
-                        this.field[ri][i] = 2;
-                    }
-                    else {
-                        this.field[ri][i] = 0;
-                    }
-
+                    this.field[ri][i] = fill ? 1 : nofill ? 2 : 0;
                 }
             })
 
             // columns
             this.columns.forEach((col, ci, columns) => {
 
-                // get rid of conflicting options
+                // get rid of options that conflict with what's already on the field
                 for (let i = 0; i < this.size; i++) {
-                    if (this.field[i][ci] == 1) {
+                    if (this.field[i][ci] == 1 || this.field[i][ci] == 2) {
                         for (let oi = col.options.length - 1; oi >= 0; oi--) {
-                            if (col.options[oi][i] == 0) {
-                                columns[ci].options.splice(oi, 1);
-                                continue;
-                            }
-                        }
-                    }
-                    else if (this.field[i][ci] == 2) {
-                        for (let oi = col.options.length - 1; oi >= 0; oi--) {
-                            if (col.options[oi][i] == 1) {
+                            if (col.options[oi][i] == (this.field[i][ci] == 1 ? 0 : 1)) {
                                 columns[ci].options.splice(oi, 1);
                                 continue;
                             }
@@ -260,7 +196,7 @@ class Solver {
                     }
                 }
 
-                // implement master blocks
+                // implement values which all options share 
                 for (let i = 0; i < this.size; i++) {
                     let fill = true, nofill = true;
 
@@ -268,32 +204,17 @@ class Solver {
                         o[i] == 0 ? fill = false : nofill = false;
                     })
 
-                    if (fill) {
-                        this.field[i][ci] = 1;
-                    }
-                    else if (nofill) {
-                        this.field[i][ci] = 2;
-                    }
-                    else {
-                        this.field[i][ci] = 0;
-                    }
-
+                    this.field[i][ci] = fill ? 1 : nofill ? 2 : 0;
                 }
             })
 
-        } while (!this.isComplete());
+        } while (!isComplete());
 
-        this.fillGame()
-    }
-
-    /**
-     * Interacts with Game object and fills in field
-     */
-    fillGame() {
+        // Interacts with Game object and fills in field
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                Game.drawCellStatus({ row, col }, this.field[row][col]) // changes CSS of cell
-                Game.setCellState({ row, col}, this.field[row][col]) // changes cell statue
+                Game.drawCellStatus({ row, col }, this.field[row][col] == 2 ? 0 : 1) // changes CSS of cell
+                Game.setCellState({ row, col }, this.field[row][col]) // changes cell statue
             }
         }
 
@@ -301,5 +222,4 @@ class Solver {
     }
 }
 
-let mysolver = new Solver(Game);
-mysolver.solve();
+new Solver(Game).solve()
