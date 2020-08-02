@@ -15,6 +15,6 @@ Start a new game by choosing any size on the lefthand column (*ex: 15x15 Nonogra
 
 If you're feeling extra risky, you can even upload your score to the Hall of Fame, where (as of July 2020 when I finished this) the website will not ban your IP address for shattering any global highscores. *OR* you can respect the community and not do that.
 
-If you encounter any errors with the script, or it fills the puzzle incorrectly, feel free to email me at [filupnot@gmail.com](filupnot@gmail.com) with a screenshot of your game. 
+If you enounter any issues, please report an issue with a screenshot of the puzzle / explanation of the context of the problem. Or feel free to submit a pull request!
 
 <sup>~ This repository was created by Philip Knott in July, 2020 ~</sup>
