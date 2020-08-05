@@ -218,6 +218,7 @@ class Solver {
             }
         }
 
+        $('#robot').val(1); 
         $('#btnReady').click() // submits game
     }
 }
