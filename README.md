@@ -13,8 +13,17 @@ If you don't know what this game is or how it works, check out [this tutorial](h
 ## Usage
 Start a new game by choosing any size on the lefthand column (*ex: 15x15 Nonograms*). When the game is loaded, right-click your new snippet and hit 'run.' Ta-da! 
 
-If you're feeling extra risky, you can even upload your score to the Hall of Fame, where (as of July 2020 when I finished this) the website will not ban your IP address for shattering any global highscores. *OR* you can respect the community and not do that.
+**EDIT:** Upon submitting a couple scores to the Hall of Fame for a laugh, the creator of the game sent me this email a week later: 
 
-If you enounter any issues, please report an issue with a screenshot of the puzzle / explanation of the context of the problem. Or feel free to submit a pull request!
+> Hi,  
+> Good job with the solver. I had to remove your scores though :)  
+> I hope you understand.  
+> There is a special hall of fame for robots - https://www.puzzle-nonograms.com/hall_robots.php?hallsize=0  
+> You can find more instructions in the HTML code.  
+> Cheers
+
+So I urge you to *NOT* submit your scores to the general leaderboards as to respect the game's community and the website's authenticity. Thank you!
+
+If you enounter any issues, please report an issue with a screenshot of the puzzle / explanation of the context of the problem. Or submit a pull request!
 
 <sup>~ This repository was created by Philip Knott in July, 2020 ~</sup>
