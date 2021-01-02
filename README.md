@@ -4,7 +4,7 @@ A script that can solve any sized nonogram puzzle on the website [puzzle-nonogra
 If you don't know what this game is or how it works, check out [this tutorial](https://www.puzzles-mobile.com/nonograms/tutorial)!
 
 ## Setup
-1. Launch [puzzle-nonograms.com](https://www.puzzle-nonograms.com)
+1. Launch [puzzle-nonograms.com](https://www.puzzle-nonograms.com) in Google Chrome
 2. Open the developer console by pressing *Ctrl+Shift+i* (Windows) or *Cmd+Option+i* (Mac)
 3. On the top menu select 'Sources,' then on the lefthand navigator select 'Snippets' (you may need to extend the tab to see it)
 4. Hit 'New Snippet,' call it whatever you'd like (*ex: solver*), then copy-and-paste all the code from [solver.js](https://github.com/Filupnot/js-nonogram/blob/master/solver.js) into your new snippet (you'll only have to do this once, and it will be accessable whenever you visit the page)
